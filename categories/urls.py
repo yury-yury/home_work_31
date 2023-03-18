@@ -15,6 +15,3 @@ urlpatterns = [
     path('<int:pk>/delete/', views.CategoryDeleteView.as_view()),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=MEDIA_ROOT)
-

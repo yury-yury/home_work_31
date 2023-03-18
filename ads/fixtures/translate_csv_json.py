@@ -1,8 +1,9 @@
 import csv
 import json
+from typing import List, Dict, Union
 
 
-def csv_to_dict(csv_file: str) -> list:
+def csv_to_dict(csv_file: str) -> List[Dict[str, Union[str, int]]]:
     """
     The csv_to_dict function takes as an argument the name and location of a file with data in CSV format
     as a string. When called, it opens a file for reading, reads data and converts it into a dictionary
@@ -30,7 +31,7 @@ def write_json(json_list: list) -> None:
 
 
 json_list: list = []
-list_ads: list = csv_to_dict('ad.csv')
+list_ads: List[Dict[str, Union[str, int]]] = csv_to_dict('ad.csv')
 for row in list_ads:
     json_list.append({
         "model": "ads.ad",

@@ -6,7 +6,7 @@ from categories.models import Category
 
 class Ad(models.Model):
     """
-    The Ads class is an inheritor of the Model class from the models library. It is a data model contained
+    The Ad class is an inheritor of the Model class from the models library. It is a data model contained
     in the ads database table. Contains a description of the types and constraints of the model fields.
     """
     STATUS = [("TRUE", "Опубликовано"),
@@ -19,9 +19,18 @@ class Ad(models.Model):
     image = models.ImageField(upload_to="images/")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+
     class Meta:
+        """
+        The Meta class is used to change the behavior of model fields,
+        such as verbose_name - a human-readable model name.
+        """
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        The __str__ function overrides the method of the parent class Model and creates
+        an output format for instances of this class.
+        """
         return self.name
