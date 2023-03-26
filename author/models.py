@@ -41,7 +41,7 @@ class User(models.Model):
     password = models.CharField(max_length=20)
     role = models.CharField(max_length=10, choices=ROLE, default="member")
     age = models.IntegerField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.SET_DEFAULT, default=None)
 
     class Meta:
         """
