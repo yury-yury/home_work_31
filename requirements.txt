@@ -10,6 +10,7 @@ cryptography==37.0.4
 distlib==0.3.6
 Django==4.1.7
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
 dulwich==0.20.46
 filelock==3.8.0
 html5lib==1.1
@@ -35,6 +36,7 @@ poetry-plugin-export==1.2.0
 psycopg2-binary==2.9.5
 ptyprocess==0.7.0
 pycparser==2.21
+PyJWT==2.6.0
 pyrsistent==0.18.1
 pytz==2022.7.1
 rapidfuzz==2.13.7

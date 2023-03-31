@@ -49,7 +49,7 @@ class AdDetailSerializer(serializers.ModelSerializer):
         defines the necessary parameters for the serializer to function.
         """
         model: Model = Ad
-        fields: List[str] = '__all__'
+        fields: str = '__all__'
 
 
 class AdCreateSerializer(serializers.ModelSerializer):

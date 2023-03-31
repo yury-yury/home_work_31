@@ -14,7 +14,7 @@ class UserListSerializer(serializers.ModelSerializer):
     """
     location = serializers.SlugRelatedField(
         read_only=True,
-        slug_field="name"
+        slug_field="name",
     )
 
     class Meta:
@@ -72,12 +72,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
         and any positional and named arguments as arguments. Adds functionality for converting incoming data
         to a format supported by the model. Returns the method of the parent class.
         """
-        self._location = self.initial_data.pop("location")
-        if type(self._location) == list:
-            self._location = ", ".join(self._location)
+        if "location" in self.initial_data:
+            self._location = self.initial_data.pop("location")
+            if type(self._location) == list:
+                self._location = ", ".join(self._location)
             location_object, _ = Location.objects.get_or_create(name=self._location)
             self.initial_data["location"] = self._location
         return super().is_valid(raise_exception=raise_exception)
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        user.set_password(user.password)
+        user.save()
+        return user
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):

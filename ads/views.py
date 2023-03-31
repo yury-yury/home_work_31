@@ -2,10 +2,12 @@ from typing import Any
 
 from django.db.models import QuerySet
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 
 from ads.models import Ad
+from ads.permissions import AdEditPermission
 from ads.serializers import AdListSerializer, AdDetailSerializer, AdCreateSerializer, AdUpdateSerializer, \
     AdDeleteSerializer
 
@@ -62,9 +64,11 @@ class AdDetailView(RetrieveAPIView):
     """
     The AdDetailView class inherits from the RetrieveAPIView class from the rest_framework generic module and is
     a class-based view for processing requests with GET methods at the address '/ad/<int: pk>'.
+    The endpoint is available only to authenticated users.
     """
     queryset: QuerySet[Ad] = Ad.objects.all()
     serializer_class: ModelSerializer = AdDetailSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class AdCreateView(CreateAPIView):
@@ -80,15 +84,21 @@ class AdUpdateView(UpdateAPIView):
     """
     The AdUpdateView class inherits from the UpdateAPIView class from the rest_framework generic module and is
     a class-based view for processing requests with PATCH methods at the address '/ad/<int:pk>/update/'.
+    The endpoint is available only to the creator of the ad and authorized users with the role
+    of administrator or moderator.
     """
     queryset: QuerySet[Ad] = Ad.objects.all()
     serializer_class: ModelSerializer = AdUpdateSerializer
+    permission_classes = [AdEditPermission]
 
 
 class AdDeleteView(DestroyAPIView):
     """
     The AdDeleteView class inherits from the DestroyAPIView class from the rest_framework generic module and is
     a class-based view for processing requests with DELETE methods at the address '/ad/int:pk>/delete/'.
+    The endpoint is available only to the creator of the ad and authorized users with the role
+    of administrator or moderator.
     """
     queryset: QuerySet[Ad] = Ad.objects.all()
     serializer_class: ModelSerializer = AdDeleteSerializer
+    permission_classes = [AdEditPermission]
