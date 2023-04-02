@@ -20,4 +20,4 @@ class AdEditPermission(BasePermission):
         if bool(request.user and (request.user.role in ["moderator", "admin"])):
             return True
 
-        return obj.user == request.user
+        return obj.author == request.user
