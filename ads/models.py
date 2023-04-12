@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 
 from author.models import User
@@ -11,13 +12,13 @@ class Ad(models.Model):
     """
     STATUS = [("TRUE", "Опубликовано"),
               ("FALSE", "Не опубликовано")]
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, blank=False, null=False, validators=[MinLengthValidator(10)])
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
-    description = models.CharField(max_length=2000)
+    price = models.DecimalField(max_digits=10, decimal_places=0, null=True, validators=[MinValueValidator(0)])
+    description = models.CharField(max_length=2000, blank=True, null=True)
     is_published = models.CharField(max_length=5, choices=STATUS, default="FALSE")
     image = models.ImageField(upload_to="images/")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL)
 
 
     class Meta:

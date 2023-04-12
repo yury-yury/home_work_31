@@ -1,5 +1,6 @@
 from typing import List
 
+from django.core.exceptions import ValidationError
 from django.db.models import Model
 from rest_framework import serializers
 
@@ -52,6 +53,11 @@ class AdDetailSerializer(serializers.ModelSerializer):
         fields: str = '__all__'
 
 
+def check_status_not_TRUE(value: str):
+    if value == "TRUE":
+        raise ValidationError('The value of the is_published field cannot be TRUE when creating the ad.')
+
+
 class AdCreateSerializer(serializers.ModelSerializer):
     """
     The AdDetailSerializer class inherits from the serializer class.ModelSerializer is a class for convenient
@@ -65,6 +71,11 @@ class AdCreateSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field="name"
+    )
+    is_published = serializers.CharField(
+        max_length=5,
+        default="FALSE",
+        validators=[check_status_not_TRUE]
     )
 
     class Meta:

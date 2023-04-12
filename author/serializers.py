@@ -1,5 +1,7 @@
+from datetime import date, timedelta
 from typing import List
 
+from django.core.exceptions import ValidationError
 from django.db.models import Model
 from rest_framework import serializers
 
@@ -46,6 +48,11 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields: str = '__all__'
 
 
+def check_age_new_user(value: date):
+    if value + timedelta(days=(9*365)) > date.today():
+        raise ValidationError('Registration of users under the age of 9 is prohibited.')
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
     """
     The UserCreateSerializer class inherits from the serializer class.ModelSerializer is a class for convenient
@@ -57,6 +64,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         queryset=Location.objects.all(),
         slug_field="name"
     )
+    birth_date = serializers.DateField(validators=[check_age_new_user])
 
     class Meta:
         """

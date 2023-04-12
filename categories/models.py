@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 
 
@@ -7,6 +8,7 @@ class Category(models.Model):
     in the category table of the database. Contains a description of the types and constraints of the model fields.
     """
     name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=10, unique=True, validators=[MinLengthValidator(5), MaxLengthValidator(10)])
 
     class Meta:
         """
