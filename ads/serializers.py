@@ -1,10 +1,10 @@
 from typing import List
 
-from django.core.exceptions import ValidationError
 from django.db.models import Model
 from rest_framework import serializers
 
 from ads.models import Ad
+from ads.validators import check_status_not_TRUE
 from author.models import User
 from categories.models import Category
 
@@ -51,11 +51,6 @@ class AdDetailSerializer(serializers.ModelSerializer):
         """
         model: Model = Ad
         fields: str = '__all__'
-
-
-def check_status_not_TRUE(value: str):
-    if value == "TRUE":
-        raise ValidationError('The value of the is_published field cannot be TRUE when creating the ad.')
 
 
 class AdCreateSerializer(serializers.ModelSerializer):

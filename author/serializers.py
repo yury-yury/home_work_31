@@ -1,11 +1,10 @@
-from datetime import date, timedelta
 from typing import List
 
-from django.core.exceptions import ValidationError
 from django.db.models import Model
 from rest_framework import serializers
 
 from author.models import User, Location
+from author.validators import check_age_new_user
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -48,11 +47,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields: str = '__all__'
 
 
-def check_age_new_user(value: date):
-    if value + timedelta(days=(9*365)) > date.today():
-        raise ValidationError('Registration of users under the age of 9 is prohibited.')
-
-
 class UserCreateSerializer(serializers.ModelSerializer):
     """
     The UserCreateSerializer class inherits from the serializer class.ModelSerializer is a class for convenient
@@ -64,7 +58,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         queryset=Location.objects.all(),
         slug_field="name"
     )
-    birth_date = serializers.DateField(validators=[check_age_new_user])
+    birth_date = serializers.DateField(
+        required=True,
+        validators=[check_age_new_user]
+    )
 
     class Meta:
         """
@@ -88,7 +85,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
             self.initial_data["location"] = self._location
         return super().is_valid(raise_exception=raise_exception)
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> User:
+        """
+        The create function overrides the method of the parent class. Accepts validated data as arguments.
+        Calls a method of the parent class. Adds functionality for storing passwords in hashed form.
+        Saves the modified data object. Returns the created object.
+        """
         user = super().create(validated_data)
         user.set_password(user.password)
         user.save()

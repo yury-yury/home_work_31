@@ -1,8 +1,9 @@
 from typing import List, Tuple
 
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.db import models
+
+from author.validators import validate_email
 
 
 class Location(models.Model):
@@ -30,14 +31,6 @@ class Location(models.Model):
         return self.name
 
 
-def validate_email(value):
-    if 'rambler.ru' in value :
-        raise ValidationError(
-            f'{value} registration with rambler.ru prohibited ',
-            params={'value': value},
-        )
-
-
 class User(AbstractUser):
     """
     The User class is an inheritor of the AbstractUser class from the django.contrib.auth.models library.
@@ -45,14 +38,14 @@ class User(AbstractUser):
     of the types and constraints of the fields of the base model.
     """
     ROLE: List[Tuple[str, str]] = [('member', 'Пользователь'),
-                              ('moderator', 'Модератор'),
-                              ('admin', 'Администратор')]
+                                   ('moderator', 'Модератор'),
+                                   ('admin', 'Администратор')]
 
     role = models.CharField(max_length=10, choices=ROLE, default="member")
     age = models.IntegerField(null=True)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null=True)
     email = models.EmailField(unique=True, validators=[validate_email])
-    location = models.ForeignKey(Location, on_delete=models.SET_DEFAULT, default=11)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT, default=1)
 
     class Meta:
         """
