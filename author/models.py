@@ -45,7 +45,7 @@ class User(AbstractUser):
     age = models.IntegerField(null=True)
     birth_date = models.DateField(null=True)
     email = models.EmailField(unique=True, validators=[validate_email])
-    location = models.ForeignKey(Location, on_delete=models.PROTECT, default=1)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
 
     class Meta:
         """

@@ -1,9 +1,10 @@
 from typing import List
 
 from django.db.models import Model
-from rest_framework import serializers
+from rest_framework import serializers, request
 
 from ads.models import Ad
+from author.models import User
 from selection.models import Selection
 
 
@@ -63,7 +64,12 @@ class SelectionCreateSerializer(serializers.ModelSerializer):
     at the address '/selection/create/'. Overrides the value of the id and owner fields for comfortable display.
     """
     id = serializers.IntegerField(required=False)
-    owner = serializers.IntegerField(required=False, default=serializers.CurrentUserDefault())
+    owner = serializers.SlugRelatedField(
+        slug_field="pk",
+        queryset=User.objects.all(),
+        required=False,
+        default=serializers.CurrentUserDefault()
+    )
 
     class Meta:
         """

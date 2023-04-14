@@ -24,9 +24,9 @@ def check_age_new_user(value: datetime.date) -> None:
     a new instance. Checks whether the value of the field corresponds to the required one. In case of non-compliance,
     it issues a verification error exception from django.core.exceptions module, otherwise returns None.
     """
-    value_str = value.strftime("%y-%m-%d").split('-')
-    value_str[0] = str(int(value_str[0]) + 9)
-    nine_year_date = datetime.strptime(('-'.join(value_str)), "%y-%m-%d")
+    value_list: list = value.strftime("%y-%m-%d").split('-')
+    value_list[0]: str = str(int(value_list[0]) + 9)
+    nine_year_date: datetime = datetime.strptime(('-'.join(value_list)), "%y-%m-%d")
 
     if nine_year_date > datetime.today():
         raise ValidationError('Registration of users under the age of 9 is prohibited.')
